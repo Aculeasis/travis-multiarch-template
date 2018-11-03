@@ -40,8 +40,8 @@ install:
 
 before_script:
   # Dirty fix https://github.com/multiarch/qemu-user-static/issues/15
-  - sudo echo -1 > /proc/sys/fs/binfmt_misc/qemu-mipsn32
-  - sudo echo -1 > /proc/sys/fs/binfmt_misc/qemu-mipsn32el
+  - sudo sh -c "echo -1 > /proc/sys/fs/binfmt_misc/qemu-mipsn32"
+  - sudo sh -c "echo -1 > /proc/sys/fs/binfmt_misc/qemu-mipsn32el"
 
 script:
   - docker run -v $(pwd):/workd -w /workd -it multiarch/debian-debootstrap:"$ARCH"-"$VERSION" bash /workd/entrypoint.sh
