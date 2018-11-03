@@ -11,18 +11,21 @@ env:
 
 matrix:
   include:
-  - env:
-    - ARCH=amd64
-    - NATIVE=True
-  - env:
-    - ARCH=i386
-    - NATIVE=True
-  - env: ARCH=ppc64el
-  - env: ARCH=mipsel
-  - env: ARCH=mips
-  - env: ARCH=armhf
-  - env: ARCH=armel
-  - env: ARCH=arm64
+    - env:
+      - ARCH=amd64
+      - NATIVE=True
+    - env:
+      - ARCH=i386
+      - NATIVE=True
+    - env: ARCH=ppc64el
+    - env: ARCH=mipsel
+    - env: ARCH=mips
+    - env: ARCH=armhf
+    - env: ARCH=armel
+    - env: ARCH=arm64
+  allow_failures:
+    - env: ARCH=mipsel
+    - env: ARCH=mips
 
 git:
   depth: 1
@@ -39,7 +42,7 @@ install:
   - docker pull multiarch/debian-debootstrap:"$ARCH"-"$VERSION"
 
 script:
-  - docker run -v $(pwd):/workd -w /workd -it multiarch/debian-debootstrap:"$ARCH"-"$VERSION" sh /workd/entrypoint.sh
+  - docker run -v $(pwd):/workd -w /workd -it multiarch/debian-debootstrap:"$ARCH"-"$VERSION" bash /workd/entrypoint.sh
 
 after_script:
   - ls -lh
