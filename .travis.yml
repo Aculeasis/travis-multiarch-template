@@ -39,7 +39,7 @@ install:
   - docker pull multiarch/debian-debootstrap:"$ARCH"-"$VERSION"
 
 script:
-  - docker run -v $(pwd):/workd -w /workd -it multiarch/debian-debootstrap:"$ARCH"-"$VERSION" bash /workd/entrypoint.sh
+  - docker run -v $(pwd):/workd -w /workd -it multiarch/debian-debootstrap:"$ARCH"-"$VERSION" sh /workd/entrypoint.sh
 
 after_script:
   - ls -lh
