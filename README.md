@@ -1,2 +1,2 @@
 ## travis-multiarch-template
-[![Build Status](https://travis-ci.com/Aculeasis/travis-multiarch-template.svg?branch=master)](https://travis-ci.com/Aculeasis/travis-multiarch-template)
+[![Tests](https://github.com/Aculeasis/travis-multiarch-template/actions/workflows/tests.yml/badge.svg)](https://github.com/Aculeasis/travis-multiarch-template/actions/workflows/tests.yml)

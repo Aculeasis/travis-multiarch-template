@@ -1,0 +1,38 @@
+# https://hub.docker.com/r/multiarch/debian-debootstrap/
+
+name: Tests
+
+on:
+  push:
+    branches: [ master]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+  schedule:
+    # Runs monthly
+    - cron:  '0 0 1 * *'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        ARCH: [amd64, i386, ppc64el, mipsel, mips, armhf, armel, arm64]
+        include:
+          - VERSION: bullseye # stretch
+    steps:
+      - uses: actions/checkout@v2
+      - name: Prepare for non-x86
+        if: ${{ matrix.ARCH in ['amd64', 'i386'] }}
+        run: |
+          docker run --privileged multiarch/qemu-user-static:register --reset
+          # Dirty fix https://github.com/multiarch/qemu-user-static/issues/15
+          sudo sh -c "echo -1 > /proc/sys/fs/binfmt_misc/qemu-mipsn32"
+          sudo sh -c "echo -1 > /proc/sys/fs/binfmt_misc/qemu-mipsn32el"
+      - name: Prepare
+        run: docker pull multiarch/debian-debootstrap:"${{ matrix.ARCH }}"-"${{ matrix.VERSION }}"
+      - name: Test
+        run: docker run -v $(pwd):/workd -w /workd -it multiarch/debian-debootstrap:"${{ matrix.ARCH }}"-"${{ matrix.VERSION }}" bash /workd/entrypoint.sh
+      - name: ls-lh
+        run: ls -lh
