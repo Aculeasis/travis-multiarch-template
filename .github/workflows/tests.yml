@@ -24,8 +24,9 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare for non-x86
-        if: ${{ contains(fromJson('["amd64", "i386"]'), matrix.ARCH) }}
+        if: ${{ !contains(fromJson('["amd64", "i386"]'), matrix.ARCH) }}
         run: |
+          echo ${{ fromJson('["amd64", "i386"]') }}
           docker run --privileged multiarch/qemu-user-static:register --reset
           # Dirty fix https://github.com/multiarch/qemu-user-static/issues/15
           sudo sh -c "echo -1 > /proc/sys/fs/binfmt_misc/qemu-mipsn32"
@@ -33,6 +34,6 @@ jobs:
       - name: Prepare
         run: docker pull multiarch/debian-debootstrap:"${{ matrix.ARCH }}"-"${{ matrix.VERSION }}"
       - name: Test
-        run: docker run -v $(pwd):/workd -w /workd -it multiarch/debian-debootstrap:"${{ matrix.ARCH }}"-"${{ matrix.VERSION }}" bash /workd/entrypoint.sh
+        run: docker run -v $(pwd):/workd -w /workd -i multiarch/debian-debootstrap:"${{ matrix.ARCH }}"-"${{ matrix.VERSION }}" bash /workd/entrypoint.sh
       - name: ls-lh
         run: ls -lh
