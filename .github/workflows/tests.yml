@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare for non-x86
-        if: ${{ matrix.ARCH in ['amd64', 'i386'] }}
+        if: ${{ contains(['amd64', 'i386'], matrix.ARCH) }}
         run: |
           docker run --privileged multiarch/qemu-user-static:register --reset
           # Dirty fix https://github.com/multiarch/qemu-user-static/issues/15
